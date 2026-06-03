@@ -1,4 +1,4 @@
-#pragma once
+О╩©#pragma once
 #include <windows.h>
 #include "IObserver.h"
 namespace Platform
@@ -8,7 +8,10 @@ namespace Platform
     public:
         virtual ~IWindowObserver() = default;
 
-        // ╕║╕║ е╟╨╦╣Е ╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║
+        // Л═└Л╡╢ Й╣╛К▐┘Л·░Л ╘ Б─■ К╙╗К⌠═ К╘■Л▀°Л╖─К╔╪ rawК║° Л┬≤Л▀═
+        virtual void OnMessage(UINT msg, WPARAM wParam, LPARAM lParam) {}
+
+        // Б■─Б■─ М┌╓КЁ╢К⌠° Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─
         // AddObserver(WM_KEYDOWN, this)
         virtual void OnKeyDown(WPARAM key) {}
         // AddObserver(WM_KEYUP, this)
@@ -20,7 +23,7 @@ namespace Platform
         // AddObserver(WM_CHAR, this)
         virtual void OnChar(WPARAM key) {}
 
-        // ╕║╕║ ╦╤©Л╫╨ ╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║
+        // Б■─Б■─ К╖┬Л ╟Л┼╓ Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─
         // AddObserver(WM_MOUSEMOVE, this)
         virtual void OnMouseMove(int x, int y) {}
         // AddObserver(WM_LBUTTONDOWN, this)
@@ -44,7 +47,7 @@ namespace Platform
         // AddObserver(WM_LBUTTONDBLCLK, this)
         virtual void OnMouseLButtonDblClk(int x, int y) {}
 
-        // ╕║╕║ ю╘╣╣©Л ╩Себ ╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║
+        // Б■─Б■─ Л°┬К▐└Л ╟ Л┐│М┐° Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─
         // AddObserver(WM_SIZE, this)
         virtual void OnResize(int width, int height) {}
         // AddObserver(WM_MOVE, this)
@@ -66,7 +69,7 @@ namespace Platform
         // AddObserver(WM_DESTROY, this)
         //virtual void OnDestroy() {}
 
-        // ╕║╕║ ╥╩╢У╦╣ ╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║╕║
+        // Б■─Б■─ К═▄К█■К╖│ Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─
         // AddObserver(WM_PAINT, this)
         virtual void OnPaint() {}
         // AddObserver(WM_ERASEBKGND, this)

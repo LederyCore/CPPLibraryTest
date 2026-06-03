@@ -132,12 +132,11 @@ void Platform::Win32Window::Notify(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 
 	// A. 전체 구독자(0번)에게 먼저 통지
-	if (m_observerMap.count(0)) 
+	auto allIt = m_observerMap.find(0);
+	if (allIt != m_observerMap.end())
 	{
-		for (auto* obs : m_observerMap[0]) 
-		{
-			// 필요에 따라 전체 알림용 가상 함수를 옵저버에 추가할 수 있습니다.
-		}
+		for (auto* obs : allIt->second)
+			obs->OnMessage(msg, wParam, lParam);
 	}
 
 	// B. 특정 메시지 구독자에게 통지
