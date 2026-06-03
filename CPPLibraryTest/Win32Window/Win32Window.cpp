@@ -148,26 +148,6 @@ void Platform::Win32Window::Notify(UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			switch (msg)
 			{
-				// ── 키보드 ──────────────────────────────────────────
-			case WM_KEYDOWN:        obs->OnKeyDown(wParam); break;
-			case WM_KEYUP:          obs->OnKeyUp(wParam); break;
-			case WM_SYSKEYDOWN:     obs->OnSysKeyDown(wParam); break;
-			case WM_SYSKEYUP:       obs->OnSysKeyUp(wParam); break;
-			case WM_CHAR:           obs->OnChar(wParam); break;
-
-				// ── 마우스 ──────────────────────────────────────────
-			case WM_MOUSEMOVE:      obs->OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); break;
-			case WM_LBUTTONDOWN:    obs->OnMouseLButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); break;
-			case WM_LBUTTONUP:      obs->OnMouseLButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); break;
-			case WM_RBUTTONDOWN:    obs->OnMouseRButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); break;
-			case WM_RBUTTONUP:      obs->OnMouseRButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); break;
-			case WM_MBUTTONDOWN:    obs->OnMouseMButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); break;
-			case WM_MBUTTONUP:      obs->OnMouseMButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); break;
-			case WM_MOUSEWHEEL:     obs->OnMouseWheel(GET_WHEEL_DELTA_WPARAM(wParam)); break;
-			case WM_XBUTTONDOWN:    obs->OnMouseXButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GET_XBUTTON_WPARAM(wParam)); break;
-			case WM_XBUTTONUP:      obs->OnMouseXButtonUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GET_XBUTTON_WPARAM(wParam)); break;
-			case WM_LBUTTONDBLCLK:  obs->OnMouseLButtonDblClk(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)); break;
-
 				// ── 윈도우 상태 ─────────────────────────────────────
 			case WM_SIZE:           obs->OnResize(LOWORD(lParam), HIWORD(lParam)); break;
 			case WM_MOVE:           obs->OnMove(LOWORD(lParam), HIWORD(lParam)); break;
@@ -177,8 +157,6 @@ void Platform::Win32Window::Notify(UINT msg, WPARAM wParam, LPARAM lParam)
 			case WM_ENTERSIZEMOVE:  obs->OnEnterSizeMove(); break;
 			case WM_EXITSIZEMOVE:   obs->OnExitSizeMove(); break;
 			case WM_DISPLAYCHANGE:  obs->OnDisplayChange(LOWORD(lParam), HIWORD(lParam)); break;
-			//case WM_CLOSE:          obs->OnClose(); break;
-			//case WM_DESTROY:        obs->OnDestroy(); break;
 
 				// ── 렌더링 ──────────────────────────────────────────
 			case WM_PAINT:          obs->OnPaint(); break;
