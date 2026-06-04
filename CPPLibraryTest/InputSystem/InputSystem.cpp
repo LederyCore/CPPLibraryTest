@@ -97,12 +97,15 @@ void InputSystem::HandleMsgKeyDown(WPARAM wParam, LPARAM lParam)
     m_keyEdge[wParam].released = false; // 눌린 상태이므로 released = false
 
 #ifdef _DEBUG
-    char buf[128];
-    std::snprintf(buf, sizeof(buf),
-        "KEY DOWN  VK=0x%02X  (wasDown=%d)\n",
-        static_cast<unsigned int>(wParam), wasDown);
+    if (m_debugToggle)
+    {
+        char buf[128];
+        std::snprintf(buf, sizeof(buf),
+            "KEY DOWN  VK=0x%02X  (wasDown=%d)\n",
+            static_cast<unsigned int>(wParam), wasDown);
 
-    std::cout << buf;
+        std::cout << buf;
+    }
 #endif
 }
 
@@ -114,12 +117,15 @@ void InputSystem::HandleMsgKeyUp(WPARAM wParam, LPARAM lParam)
     m_keyEdge[wParam].released = true; // 키가 떼어졌음을 기록
 
 #ifdef _DEBUG
-    char buf[64];
-    std::snprintf(buf, sizeof(buf),
-        "KEY UP    VK=0x%02X\n",
-        static_cast<unsigned int>(wParam));
+    if (m_debugToggle)
+    {
+        char buf[64];
+        std::snprintf(buf, sizeof(buf),
+            "KEY UP    VK=0x%02X\n",
+            static_cast<unsigned int>(wParam));
 
-    std::cout << buf;
+        std::cout << buf;
+    }
 #endif
 }
 
@@ -152,12 +158,15 @@ void InputSystem::HandleMsgMouse(const MSG& msg)
     }
 
 #ifdef _DEBUG
-    char buf[128];
-    std::snprintf(buf, sizeof(buf),
-        "MOUSE (%d,%d)  left=%d right=%d\n",
-        x, y, m_curMouse.leftPressed, m_curMouse.rightPressed);
+    if (m_debugToggle)
+    {
+        char buf[128];
+        std::snprintf(buf, sizeof(buf),
+            "MOUSE (%d,%d)  left=%d right=%d\n",
+            x, y, m_curMouse.leftPressed, m_curMouse.rightPressed);
 
-    std::cout << buf;
+        std::cout << buf;
+    }
 #endif
 }
 
@@ -262,11 +271,14 @@ void InputSystem::HandleMouseInput(RAWINPUT& raw)
         m_curMouse.wheelDelta += static_cast<SHORT>(mouse.usButtonData);
 
 #ifdef _DEBUG
-    char buf[128];
-    std::snprintf(buf, sizeof(buf),
-        "RAW MOUSE delta(%d,%d) left=%d right=%d wheel=%d\n",
-        mouse.lLastX, mouse.lLastY,
-        m_curMouse.leftPressed, m_curMouse.rightPressed, m_curMouse.wheelDelta);
-    std::cout << buf;
+    if (m_debugToggle)
+    {
+        char buf[128];
+        std::snprintf(buf, sizeof(buf),
+            "RAW MOUSE delta(%d,%d) left=%d right=%d wheel=%d\n",
+            mouse.lLastX, mouse.lLastY,
+            m_curMouse.leftPressed, m_curMouse.rightPressed, m_curMouse.wheelDelta);
+        std::cout << buf;
+    }
 #endif
 }
