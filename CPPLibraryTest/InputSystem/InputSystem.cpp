@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "InputSystem.h"
 
 using namespace Platform;
@@ -7,39 +7,41 @@ inline void GetVkName(const RAWKEYBOARD& kb, WCHAR* out, int cch)
 {
     if (cch <= 0 || !out) return;
 
-    // ½ºÄµÄÚµå+È®Àå ÇÃ·¡±×¸¦ lParam Çü½ÄÀ¸·Î º¯È¯
+    // ìŠ¤ìº”ì½”ë“œ+í™•ì¥ í”Œë˜ê·¸ë¥¼ lParam í˜•ì‹ìœ¼ë¡œ ë³€í™˜
     UINT scan = kb.MakeCode;
     if (kb.Flags & RI_KEY_E0)
-        scan |= 0xE000;            // È®Àå Å°(¿¹: ¿À¸¥ÂÊ Ctrl, È­»ìÇ¥ µî)
+        scan |= 0xE000;            // í™•ì¥ í‚¤(ì˜ˆ: ì˜¤ë¥¸ìª½ Ctrl, í™”ì‚´í‘œ ë“±)
 
     LONG lParam = static_cast<LONG>(scan << 16);
     if (kb.Flags & RI_KEY_E0)
         lParam |= (1 << 24);
 
     if (!GetKeyNameTextW(lParam, out, cch))
-        swprintf_s(out, cch, L"VK 0x%02X", kb.VKey); // ½ÇÆĞ ½Ã VK ÄÚµå·Î ´ëÃ¼
+        swprintf_s(out, cch, L"VK 0x%02X", kb.VKey); // ì‹¤íŒ¨ ì‹œ VK ì½”ë“œë¡œ ëŒ€ì²´
 }
 
 
 bool InputSystem::Initialize(HWND hwnd)
 {
-#if _USE_RAWINPUTDEVICE
+    // #if _USE_RAWINPUTDEVICE ì œê±° â€” í•­ìƒ ë“±ë¡
     RAWINPUTDEVICE rid[2] = {};
 
-    // Å°º¸µå
     rid[0].usUsagePage = 0x01;
-    rid[0].usUsage = 0x06; // Keyboard
+    rid[0].usUsage = 0x06;  // Keyboard
     rid[0].dwFlags = 0;
     rid[0].hwndTarget = hwnd;
 
-    // ¸¶¿ì½º
     rid[1].usUsagePage = 0x01;
-    rid[1].usUsage = 0x02; // Mouse
+    rid[1].usUsage = 0x02;  // Mouse
     rid[1].dwFlags = 0;
     rid[1].hwndTarget = hwnd;
 
-    if (!RegisterRawInputDevices(rid, 2, sizeof(RAWINPUTDEVICE))) return false;
-#endif// _USE_RAWINPUTDEVICE
+    if (!RegisterRawInputDevices(rid, 2, sizeof(RAWINPUTDEVICE)))
+    {
+        // ë“±ë¡ ì‹¤íŒ¨ í™•ì¸
+        return false;
+    }
+
     return true;
 }
 
@@ -50,20 +52,21 @@ bool InputSystem::OnHandleMessage(const MSG& msg)
     case WM_INPUT:
     {
         HandleRawInput(msg.lParam);
+        return true;
     }
     break;
 
-    case WM_KEYDOWN:
-    {
-        HandleMsgKeyDown(msg.wParam, msg.lParam);
-    }
-    break;
+    //case WM_KEYDOWN:
+    //{
+    //    HandleMsgKeyDown(msg.wParam, msg.lParam);
+    //}
+    //break;
 
-    case WM_KEYUP:
-    {
-        HandleMsgKeyUp(msg.wParam, msg.lParam);
-    }
-    break;
+    //case WM_KEYUP:
+    //{
+    //    HandleMsgKeyUp(msg.wParam, msg.lParam);
+    //}
+    //break;
 
     case WM_MOUSEMOVE:
     case WM_LBUTTONDOWN:
@@ -72,14 +75,13 @@ bool InputSystem::OnHandleMessage(const MSG& msg)
     case WM_RBUTTONUP:
     {
         HandleMsgMouse(msg);
+        return true;
     }
     break;
 
     default:
         return false; // Unhandled message
     }
-
-    return true;
 }
 
 void InputSystem::HandleMsgKeyDown(WPARAM wParam, LPARAM lParam)
@@ -91,10 +93,10 @@ void InputSystem::HandleMsgKeyDown(WPARAM wParam, LPARAM lParam)
 
     if (!wasDown)
     {
-        m_keyEdge[wParam].pressed = true;   // Ã³À½ ´­·ÈÀ» ¶§¸¸ true
+        m_keyEdge[wParam].pressed = true;   // ì²˜ìŒ ëˆŒë ¸ì„ ë•Œë§Œ true
     }
 
-    m_keyEdge[wParam].released = false; // ´­¸° »óÅÂÀÌ¹Ç·Î released = false
+    m_keyEdge[wParam].released = false; // ëˆŒë¦° ìƒíƒœì´ë¯€ë¡œ released = false
 
 #ifdef _DEBUG
     if (m_debugToggle)
@@ -113,8 +115,8 @@ void InputSystem::HandleMsgKeyUp(WPARAM wParam, LPARAM lParam)
 {
     assert(wParam < 256);
 
-    m_keyDown[wParam] = false; // ÇöÀç Å°°¡ ´­¸®Áö ¾ÊÀ½À» ±â·Ï
-    m_keyEdge[wParam].released = true; // Å°°¡ ¶¼¾îÁ³À½À» ±â·Ï
+    m_keyDown[wParam] = false; // í˜„ì¬ í‚¤ê°€ ëˆŒë¦¬ì§€ ì•ŠìŒì„ ê¸°ë¡
+    m_keyEdge[wParam].released = true; // í‚¤ê°€ ë–¼ì–´ì¡ŒìŒì„ ê¸°ë¡
 
 #ifdef _DEBUG
     if (m_debugToggle)
@@ -132,7 +134,7 @@ void InputSystem::HandleMsgKeyUp(WPARAM wParam, LPARAM lParam)
 void InputSystem::HandleMsgMouse(const MSG& msg)
 {
     int x = GetXFromLParam(msg.lParam);
-    int y = GetYFromLParam(msg.lParam); // [¿À·ù ¼öÁ¤]
+    int y = GetYFromLParam(msg.lParam); // [ì˜¤ë¥˜ ìˆ˜ì •]
 
     m_curMouse.pos = { x, y };
 
@@ -177,7 +179,7 @@ void InputSystem::HandleRawInput(LPARAM lParam)
 
     if (dwSize == 0)
     {
-        // ¿À·ù Ã³¸®: dwSize°¡ 0ÀÎ °æ¿ì´Â Àß¸øµÈ ÀÔ·ÂÀÌ°Å³ª Áö¿øµÇÁö ¾Ê´Â ÀÔ·ÂÀÏ ¼ö ÀÖÀ½
+        // ì˜¤ë¥˜ ì²˜ë¦¬: dwSizeê°€ 0ì¸ ê²½ìš°ëŠ” ì˜ëª»ëœ ì…ë ¥ì´ê±°ë‚˜ ì§€ì›ë˜ì§€ ì•ŠëŠ” ì…ë ¥ì¼ ìˆ˜ ìˆìŒ
         if (GetLastError() != ERROR_SUCCESS)
         {
             std::cerr << "GetRawInputData failed with error: " << GetLastError() << std::endl;
@@ -211,7 +213,20 @@ void InputSystem::HandleKeyboardInput(RAWINPUT& raw)
     bool breakCode = (kb.Flags & RI_KEY_BREAK) != 0;   // 1 = KeyUp
     UINT vk = kb.VKey;
 
-    if (vk >= 0xFF)  return;      // 0xFF = Àß¸øµÈ Å° ½ÅÈ£
+    if (kb.MakeCode && (kb.Flags & RI_KEY_E0))
+    {
+        switch (vk)
+        {
+        case VK_LEFT:  case VK_RIGHT:
+        case VK_UP:    case VK_DOWN:
+        case VK_INSERT: case VK_DELETE:
+        case VK_HOME:   case VK_END:
+        case VK_PRIOR:  case VK_NEXT:
+            break;  // ì´ë¯¸ ì˜¬ë°”ë¥¸ VK â€” ê·¸ëŒ€ë¡œ ì‚¬ìš©
+        }
+    }
+
+    if (vk >= 0xFF)  return;      // 0xFF = ì˜ëª»ëœ í‚¤ ì‹ í˜¸
 
 
     KeyEdge& edge = m_keyEdge[vk];
@@ -222,7 +237,7 @@ void InputSystem::HandleKeyboardInput(RAWINPUT& raw)
         if (true == down) edge.released = true;
         down = false;
 
-        std::cout << "Key Up: VK " << vk << "time" << std::endl;
+        //std::cout << "Key Up: VK " << vk << "time" << std::endl;
 
     }
     else // KeyDown
@@ -230,7 +245,7 @@ void InputSystem::HandleKeyboardInput(RAWINPUT& raw)
         if (false == down) edge.pressed = true;
         down = true;
 
-        std::cout << "Key Down: VK " << vk << std::endl;
+        //std::cout << "Key Down: VK " << vk << std::endl;
     }
 }
 
@@ -238,15 +253,15 @@ void InputSystem::HandleMouseInput(RAWINPUT& raw)
 {
     RAWMOUSE& mouse = raw.data.mouse;
 
-    // ¦¡¦¡ ÀÌµ¿ µ¨Å¸ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-    // Raw InputÀº Àı´ëÁÂÇ¥°¡ ¾Æ´Ñ ÇÁ·¹ÀÓ ÀÌµ¿·®(delta)
+    // â”€â”€ ì´ë™ ë¸íƒ€ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Raw Inputì€ ì ˆëŒ€ì¢Œí‘œê°€ ì•„ë‹Œ í”„ë ˆì„ ì´ë™ëŸ‰(delta)
     if (!(mouse.usFlags & MOUSE_MOVE_ABSOLUTE))
     {
         m_curMouse.deltaX += mouse.lLastX;
         m_curMouse.deltaY += mouse.lLastY;
     }
 
-    // ¦¡¦¡ ¹öÆ° Ã³¸® (ºñÆ®¸¶½ºÅ©·Î ÇÑ ¸Ş½ÃÁö¿¡ ¿©·¯ ¹öÆ° µ¿½Ã Ã³¸®) ¦¡¦¡
+    // â”€â”€ ë²„íŠ¼ ì²˜ë¦¬ (ë¹„íŠ¸ë§ˆìŠ¤í¬ë¡œ í•œ ë©”ì‹œì§€ì— ì—¬ëŸ¬ ë²„íŠ¼ ë™ì‹œ ì²˜ë¦¬) â”€â”€
     auto HandleBtn = [&](USHORT downFlag, USHORT upFlag, bool& pressed, MouseEdge& edge)
         {
             if (mouse.usButtonFlags & downFlag)
@@ -266,7 +281,7 @@ void InputSystem::HandleMouseInput(RAWINPUT& raw)
     HandleBtn(RI_MOUSE_RIGHT_BUTTON_DOWN, RI_MOUSE_RIGHT_BUTTON_UP, m_curMouse.rightPressed, m_mouseEdge[1]);
     HandleBtn(RI_MOUSE_MIDDLE_BUTTON_DOWN, RI_MOUSE_MIDDLE_BUTTON_UP, m_curMouse.middlePressed, m_mouseEdge[2]);
 
-    // ¦¡¦¡ ÈÙ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+    // â”€â”€ íœ  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if (mouse.usButtonFlags & RI_MOUSE_WHEEL)
         m_curMouse.wheelDelta += static_cast<SHORT>(mouse.usButtonData);
 
